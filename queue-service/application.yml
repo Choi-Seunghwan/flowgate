@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+app:
+  queue:
+    wave:
+      size: 200
+      intervalMs: 60000 # 1Min
+    passTokenTtlSeconds: 300 # 5Min
+    permitsPerMinute: 10 # 분당 10명씩 허용
+    demoSeedMin: 30
+    demoSeedMax: 50
