@@ -1,7 +1,4 @@
-package com.chuz.flowgate.ticket.service;
-
-import com.chuz.flowgate.ticket.entity.Product;
-import com.chuz.flowgate.ticket.repository.ProductRepository;
+package com.chuz.flowgate.ticket.product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

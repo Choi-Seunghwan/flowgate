@@ -1,6 +1,4 @@
-package com.chuz.flowgate.ticket.repository;
-
-import com.chuz.flowgate.ticket.entity.Product;
+package com.chuz.flowgate.ticket.product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

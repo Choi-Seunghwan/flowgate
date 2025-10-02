@@ -1,4 +1,4 @@
-package com.chuz.flowgate.ticket.entity;
+package com.chuz.flowgate.ticket.product;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

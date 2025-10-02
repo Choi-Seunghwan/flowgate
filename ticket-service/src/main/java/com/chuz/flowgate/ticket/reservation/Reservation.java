@@ -1,5 +1,7 @@
-package com.chuz.flowgate.ticket.entity;
+package com.chuz.flowgate.ticket.reservation;
 
+import com.chuz.flowgate.ticket.entity.User;
+import com.chuz.flowgate.ticket.product.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

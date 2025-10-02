@@ -1,7 +1,4 @@
-package com.chuz.flowgate.ticket.controller;
-
-import com.chuz.flowgate.ticket.entity.Product;
-import com.chuz.flowgate.ticket.service.ProductService;
+package com.chuz.flowgate.ticket.product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

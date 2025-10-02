@@ -1,10 +1,8 @@
-package com.chuz.flowgate.ticket.service;
+package com.chuz.flowgate.ticket.reservation;
 
-import com.chuz.flowgate.ticket.entity.Product;
-import com.chuz.flowgate.ticket.entity.Reservation;
+import com.chuz.flowgate.ticket.product.Product;
+import com.chuz.flowgate.ticket.product.ProductRepository;
 import com.chuz.flowgate.ticket.entity.User;
-import com.chuz.flowgate.ticket.repository.ProductRepository;
-import com.chuz.flowgate.ticket.repository.ReservationRepository;
 import com.chuz.flowgate.ticket.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
