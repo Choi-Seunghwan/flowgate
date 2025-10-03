@@ -1,5 +1,6 @@
 package com.chuz.flowgate.ticket.reservation;
 
+import com.chuz.flowgate.ticket.config.RequirePassToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,10 @@ public class ReservationController {
 
     /**
      * 예매 생성
+     * Pass Token 검증 필수 (대기열 통과 후에만 예매 가능)
      */
     @PostMapping
+    @RequirePassToken
     public ResponseEntity<Reservation> createReservation(@RequestParam Long userId,
             @RequestParam Long productId, @RequestParam Integer quantity) {
         Reservation reservation = reservationService.createReservation(userId, productId, quantity);

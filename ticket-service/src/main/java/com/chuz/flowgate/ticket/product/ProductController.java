@@ -2,9 +2,12 @@ package com.chuz.flowgate.ticket.product;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 상품 컨트롤러
@@ -50,5 +53,17 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProductsWithStock() {
         List<Product> products = productService.getProductsWithStock();
         return ResponseEntity.ok(products);
+    }
+
+    /**
+     * 인증 테스트 API - 현재 로그인한 사용자 정보 반환
+     */
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, Object>> getCurrentUser(Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("userId", authentication.getPrincipal());
+        response.put("authorities", authentication.getAuthorities());
+        response.put("authenticated", authentication.isAuthenticated());
+        return ResponseEntity.ok(response);
     }
 }
