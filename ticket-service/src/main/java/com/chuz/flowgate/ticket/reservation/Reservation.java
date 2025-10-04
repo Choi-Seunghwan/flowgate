@@ -23,6 +23,9 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String sagaId; // SAGA 트랜잭션 ID
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -58,8 +61,9 @@ public class Reservation {
     }
 
     // 예매 생성
-    public static Reservation create(User user, Product product, Integer quantity) {
+    public static Reservation create(User user, Product product, Integer quantity, String sagaId) {
         Reservation reservation = new Reservation();
+        reservation.sagaId = sagaId;
         reservation.user = user;
         reservation.product = product;
         reservation.quantity = quantity;
@@ -68,10 +72,18 @@ public class Reservation {
         return reservation;
     }
 
-    // 예매 확정
-    public void confirm() {
+    // 결제 대기 상태로 변경
+    public void awaitPayment() {
         if (this.status != ReservationStatus.PENDING) {
-            throw new IllegalStateException("대기 중인 예매만 확정할 수 있습니다.");
+            throw new IllegalStateException("대기 중인 예매만 결제 대기 상태로 변경할 수 있습니다.");
+        }
+        this.status = ReservationStatus.PAYMENT_PENDING;
+    }
+
+    // 예매 확정 (결제 완료 후)
+    public void confirm() {
+        if (this.status != ReservationStatus.PAYMENT_PENDING) {
+            throw new IllegalStateException("결제 대기 중인 예매만 확정할 수 있습니다.");
         }
         this.status = ReservationStatus.CONFIRMED;
     }
@@ -85,8 +97,9 @@ public class Reservation {
     }
 
     public enum ReservationStatus {
-        PENDING,    // 대기
-        CONFIRMED,  // 확정
-        CANCELLED   // 취소
+        PENDING,          // 대기 (예약 생성됨, 결제 대기 중)
+        PAYMENT_PENDING,  // 결제 처리 중
+        CONFIRMED,        // 확정 (결제 완료)
+        CANCELLED         // 취소 (결제 실패 또는 사용자 취소)
     }
 }
