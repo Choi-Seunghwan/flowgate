@@ -3,7 +3,7 @@ spring:
     name: payment-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/flowgate_payment
+    url: jdbc:postgresql://localhost:5432/reservex_payment
     username: dev
     password:
     driver-class-name: org.postgresql.Driver

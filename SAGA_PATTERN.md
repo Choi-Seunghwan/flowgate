@@ -1,8 +1,8 @@
-# SAGA Pattern 구현 가이드
+# ReserveX - SAGA Pattern 구현 가이드
 
 ## 개요
 
-이 프로젝트는 **Choreography 기반 SAGA 패턴**을 사용하여 MSA 환경에서 분산 트랜잭션을 처리합니다.
+**ReserveX**는 **Choreography 기반 SAGA 패턴**을 사용하여 MSA 환경에서 분산 트랜잭션을 처리하는 티켓 예매 시스템입니다.
 
 ## 아키텍처
 
@@ -160,8 +160,8 @@ docker-compose up -d
 
 ### 2. PostgreSQL 데이터베이스 생성
 ```sql
-CREATE DATABASE flowgate_ticket;
-CREATE DATABASE flowgate_payment;
+CREATE DATABASE reservex_ticket;
+CREATE DATABASE reservex_payment;
 ```
 
 ### 3. 서비스 실행

@@ -4,7 +4,7 @@ plugins {
   id 'java'
 }
 
-group = 'com.chuz.flowgate'
+group = 'com.chuz.reservex'
 version = '0.0.1-SNAPSHOT'
 
 java {

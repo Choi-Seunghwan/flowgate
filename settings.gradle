@@ -6,6 +6,6 @@ pluginManagement {
 }
 
 
-rootProject.name = 'flowgate'
+rootProject.name = 'reservex'
 include 'common', 'account-service', 'queue-service', 'ticket-service', 'payment-service'
 
