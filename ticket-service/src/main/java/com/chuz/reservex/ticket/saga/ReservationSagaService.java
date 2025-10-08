@@ -9,8 +9,6 @@ import com.chuz.reservex.ticket.product.Product;
 import com.chuz.reservex.ticket.product.ProductRepository;
 import com.chuz.reservex.ticket.reservation.Reservation;
 import com.chuz.reservex.ticket.reservation.ReservationRepository;
-import com.chuz.reservex.ticket.entity.User;
-import com.chuz.reservex.ticket.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,7 +16,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -31,7 +28,6 @@ public class ReservationSagaService {
 
 	private final ReservationRepository reservationRepository;
 	private final ProductRepository productRepository;
-	private final UserRepository userRepository;
 	private final KafkaTemplate<String, Object> kafkaTemplate;
 
 	/**
@@ -44,10 +40,7 @@ public class ReservationSagaService {
 		// SAGA ID 생성
 		String sagaId = UUID.randomUUID().toString();
 
-		// 사용자 및 상품 조회
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-
+		// 상품 조회
 		Product product = productRepository.findById(productId)
 			.orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
 
@@ -56,7 +49,7 @@ public class ReservationSagaService {
 		productRepository.save(product);
 
 		// 예약 생성
-		Reservation reservation = Reservation.create(user, product, quantity, sagaId);
+		Reservation reservation = Reservation.create(userId, product, quantity, sagaId);
 		reservation.awaitPayment();
 		reservationRepository.save(reservation);
 

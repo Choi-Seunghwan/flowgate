@@ -1,6 +1,5 @@
 package com.chuz.reservex.ticket.reservation;
 
-import com.chuz.reservex.ticket.entity.User;
 import com.chuz.reservex.ticket.product.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -26,9 +25,8 @@ public class Reservation {
     @Column(unique = true)
     private String sagaId; // SAGA 트랜잭션 ID
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private Long userId; // account-service의 User ID 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
@@ -61,10 +59,10 @@ public class Reservation {
     }
 
     // 예매 생성
-    public static Reservation create(User user, Product product, Integer quantity, String sagaId) {
+    public static Reservation create(Long userId, Product product, Integer quantity, String sagaId) {
         Reservation reservation = new Reservation();
         reservation.sagaId = sagaId;
-        reservation.user = user;
+        reservation.userId = userId;
         reservation.product = product;
         reservation.quantity = quantity;
         reservation.totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));

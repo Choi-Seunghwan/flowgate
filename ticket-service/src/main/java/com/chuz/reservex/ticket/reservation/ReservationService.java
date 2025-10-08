@@ -2,13 +2,12 @@ package com.chuz.reservex.ticket.reservation;
 
 import com.chuz.reservex.ticket.product.Product;
 import com.chuz.reservex.ticket.product.ProductRepository;
-import com.chuz.reservex.ticket.entity.User;
-import com.chuz.reservex.ticket.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 예매 서비스
@@ -20,16 +19,14 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
 
     /**
      * 예매 생성
+     * @deprecated SAGA 패턴 사용을 위해 ReservationSagaService.createReservationAndStartSaga() 사용 권장
      */
+    @Deprecated
     @Transactional
     public Reservation createReservation(Long userId, Long productId, Integer quantity) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
 
@@ -37,7 +34,8 @@ public class ReservationService {
         product.decreaseStock(quantity);
 
         // 예매 생성
-        Reservation reservation = Reservation.create(user, product, quantity);
+        String sagaId = UUID.randomUUID().toString();
+        Reservation reservation = Reservation.create(userId, product, quantity, sagaId);
 
         return reservationRepository.save(reservation);
     }

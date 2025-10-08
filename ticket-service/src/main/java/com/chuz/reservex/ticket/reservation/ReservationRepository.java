@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 예매 레포지토리
@@ -13,6 +14,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     // 사용자별 예매 내역 조회
     List<Reservation> findByUserId(Long userId);
+
+    Optional<Reservation> findBySagaId(String sagaId);
 
     // 상품별 예매 내역 조회
     List<Reservation> findByProductId(Long productId);
