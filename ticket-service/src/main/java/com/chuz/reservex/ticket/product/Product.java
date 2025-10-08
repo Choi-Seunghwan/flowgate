@@ -17,57 +17,57 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+  @Column(columnDefinition = "TEXT")
+  private String description;
 
-    @Column(nullable = false)
-    private BigDecimal price;
+  @Column(nullable = false)
+  private BigDecimal price;
 
-    @Column(nullable = false)
-    private Integer totalStock; // 전체 재고
+  @Column(nullable = false)
+  private Integer totalStock; // 전체 재고
 
-    @Column(nullable = false)
-    private Integer availableStock; // 예매 가능한 재고
+  @Column(nullable = false)
+  private Integer availableStock; // 예매 가능한 재고
 
-    @Column(nullable = false)
-    private LocalDateTime saleStartAt; // 판매 시작 시간
+  @Column(nullable = false)
+  private LocalDateTime saleStartAt; // 판매 시작 시간
 
-    @Column(nullable = false)
-    private LocalDateTime saleEndAt; // 판매 종료 시간
+  @Column(nullable = false)
+  private LocalDateTime saleEndAt; // 판매 종료 시간
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
+  private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+  @PrePersist
+  protected void onCreate() {
+    createdAt = LocalDateTime.now();
+    updatedAt = LocalDateTime.now();
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = LocalDateTime.now();
+  }
+
+  // 재고 감소
+  public void decreaseStock(int quantity) {
+    if (this.availableStock < quantity) {
+      throw new IllegalStateException("재고가 부족합니다.");
     }
+    this.availableStock -= quantity;
+  }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    // 재고 감소
-    public void decreaseStock(int quantity) {
-        if (this.availableStock < quantity) {
-            throw new IllegalStateException("재고가 부족합니다.");
-        }
-        this.availableStock -= quantity;
-    }
-
-    // 재고 복구
-    public void increaseStock(int quantity) {
-        this.availableStock += quantity;
-    }
+  // 재고 복구
+  public void increaseStock(int quantity) {
+    this.availableStock += quantity;
+  }
 }

@@ -12,8 +12,8 @@ trim_trailing_whitespace = true
 # Java 파일
 [*.java]
 indent_style = space
-indent_size = 4
-continuation_indent_size = 8
+indent_size = 2
+continuation_indent_size = 4
 max_line_length = 120
 
 # YAML 파일
@@ -23,7 +23,7 @@ indent_size = 2
 
 # Gradle 파일
 [*.gradle]
-indent_style = tab
+indent_style = space
 indent_size = 2
 
 # Markdown 파일

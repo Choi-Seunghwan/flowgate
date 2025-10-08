@@ -12,14 +12,14 @@ import java.util.Optional;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    // 사용자별 예매 내역 조회
-    List<Reservation> findByUserId(Long userId);
+  // 사용자별 예매 내역 조회
+  List<Reservation> findByUserId(Long userId);
 
-    Optional<Reservation> findBySagaId(String sagaId);
+  Optional<Reservation> findBySagaId(String sagaId);
 
-    // 상품별 예매 내역 조회
-    List<Reservation> findByProductId(Long productId);
+  // 상품별 예매 내역 조회
+  List<Reservation> findByProductId(Long productId);
 
-    // 사용자의 특정 상태 예매 조회
-    List<Reservation> findByUserIdAndStatus(Long userId, Reservation.ReservationStatus status);
+  // 사용자의 특정 상태 예매 조회
+  List<Reservation> findByUserIdAndStatus(Long userId, Reservation.ReservationStatus status);
 }

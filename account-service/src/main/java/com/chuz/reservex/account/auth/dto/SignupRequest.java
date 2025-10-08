@@ -1,4 +1,4 @@
-package com.chuz.reservex.account.auth;
+package com.chuz.reservex.account.auth.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class SignupRequest {
-
-    private String email;
-    private String name;
-    private String password;
-    private String phoneNumber;
+  private String email;
+  private String name;
+  private String password;
+  private String phoneNumber;
 }

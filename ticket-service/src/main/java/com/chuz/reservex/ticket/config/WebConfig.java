@@ -12,11 +12,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final PassTokenInterceptor passTokenInterceptor;
+  private final PassTokenInterceptor passTokenInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(passTokenInterceptor)
-                .addPathPatterns("/api/**"); // 모든 API 경로에 적용
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(passTokenInterceptor)
+        .addPathPatterns("/api/**"); // 모든 API 경로에 적용
+  }
 }

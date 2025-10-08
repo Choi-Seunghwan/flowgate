@@ -23,44 +23,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+  private final JwtTokenProvider jwtTokenProvider;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+      FilterChain filterChain)
+      throws ServletException, IOException {
 
-        String token = getTokenFromRequest(request);
+    String token = getTokenFromRequest(request);
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Long userId = jwtTokenProvider.getUserIdFromToken(token);
-            String email = jwtTokenProvider.getEmailFromToken(token);
-            String role = jwtTokenProvider.getRoleFromToken(token);
+    if (token != null && jwtTokenProvider.validateToken(token)) {
+      Long userId = jwtTokenProvider.getUserIdFromToken(token);
+      String email = jwtTokenProvider.getEmailFromToken(token);
+      String role = jwtTokenProvider.getRoleFromToken(token);
 
-            // Spring Security 인증 객체 생성
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userId,
-                    null,
-                    List.of(new SimpleGrantedAuthority("ROLE_" + role))
-            );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+      // Spring Security 인증 객체 생성
+      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+          userId,
+          null,
+          List.of(new SimpleGrantedAuthority("ROLE_" + role)));
+      authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            // SecurityContext에 인증 정보 설정
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-
-        filterChain.doFilter(request, response);
+      // SecurityContext에 인증 정보 설정
+      SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    /**
-     * Request Header에서 토큰 추출
-     */
-    private String getTokenFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
+    filterChain.doFilter(request, response);
+  }
 
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
+  /**
+   * Request Header에서 토큰 추출
+   */
+  private String getTokenFromRequest(HttpServletRequest request) {
+    String bearerToken = request.getHeader("Authorization");
 
-        return null;
+    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+      return bearerToken.substring(7);
     }
+
+    return null;
+  }
 }

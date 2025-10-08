@@ -12,9 +12,9 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    // 판매 가능한 상품 조회
-    List<Product> findBySaleStartAtBeforeAndSaleEndAtAfter(LocalDateTime now1, LocalDateTime now2);
+  // 판매 가능한 상품 조회
+  List<Product> findBySaleStartAtBeforeAndSaleEndAtAfter(LocalDateTime now1, LocalDateTime now2);
 
-    // 재고가 있는 상품 조회
-    List<Product> findByAvailableStockGreaterThan(Integer stock);
+  // 재고가 있는 상품 조회
+  List<Product> findByAvailableStockGreaterThan(Integer stock);
 }
