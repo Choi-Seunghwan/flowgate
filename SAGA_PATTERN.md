@@ -1,16 +1,19 @@
-# ReserveX - SAGA Pattern 구현 가이드
+# ReserveX
 
 ## 개요
 
-**ReserveX**는 **Choreography 기반 SAGA 패턴**을 사용하여 MSA 환경에서 분산 트랜잭션을 처리하는 티켓 예매 시스템입니다.
+- 티켓 예매 시스템
+- Choreography 기반 SAGA 패턴
+- MSA 환경 분산 트랜잭션 처리
 
 ## 아키텍처
 
 ### 서비스 구성
-- **ticket-service** (port 8080): 티켓 예매 관리
-- **payment-service** (port 8082): 결제 처리
-- **queue-service** (port 8081): 대기열 관리
-- **account-service**: 계정 관리
+
+- **ticket-service** : 티켓 예매 관리
+- **payment-service** : 결제 처리
+- **queue-service** : 대기열 관리
+- **account-service** : 계정 관리
 
 ### SAGA 흐름
 
@@ -102,6 +105,7 @@
 ### 1. Common 모듈 (공통 이벤트 정의)
 
 **SAGA 이벤트**
+
 - `SagaEvent`: 기본 이벤트 클래스
 - `ReservationCreatedEvent`: 예약 생성 이벤트
 - `PaymentCompletedEvent`: 결제 완료 이벤트
@@ -109,6 +113,7 @@
 - `ReservationCancelledEvent`: 예약 취소 이벤트
 
 **Kafka 토픽**
+
 ```java
 public class SagaTopics {
     public static final String RESERVATION_CREATED = "saga.reservation.created";
@@ -121,11 +126,13 @@ public class SagaTopics {
 ### 2. Ticket Service
 
 **ReservationSagaService**
+
 - `createReservationAndStartSaga()`: SAGA 시작
 - `handlePaymentCompleted()`: 결제 완료 처리
 - `handlePaymentFailed()`: 결제 실패 처리 (보상 트랜잭션)
 
 **Reservation Entity 상태**
+
 ```java
 public enum ReservationStatus {
     PENDING,          // 예약 생성됨, 결제 대기 중
@@ -138,10 +145,12 @@ public enum ReservationStatus {
 ### 3. Payment Service
 
 **PaymentService**
+
 - `handleReservationCreated()`: 예약 생성 이벤트 수신 → 결제 처리
 - `processPayment()`: 실제 결제 로직 (현재는 Mock)
 
 **Payment Entity 상태**
+
 ```java
 public enum PaymentStatus {
     PENDING,     // 결제 대기
@@ -154,17 +163,20 @@ public enum PaymentStatus {
 ## 실행 방법
 
 ### 1. Kafka 실행
+
 ```bash
 docker-compose up -d
 ```
 
 ### 2. PostgreSQL 데이터베이스 생성
+
 ```sql
 CREATE DATABASE reservex_ticket;
 CREATE DATABASE reservex_payment;
 ```
 
 ### 3. 서비스 실행
+
 ```bash
 # Ticket Service
 ./gradlew :ticket-service:bootRun
@@ -179,6 +191,7 @@ CREATE DATABASE reservex_payment;
 ## API 예제
 
 ### 예약 생성 (SAGA 시작)
+
 ```bash
 POST /api/reservations
 Authorization: Bearer {JWT_TOKEN}
@@ -194,6 +207,7 @@ Content-Type: application/json
 ## 모니터링
 
 ### Kafka 메시지 확인
+
 ```bash
 # 예약 생성 이벤트
 docker exec -it kafka kafka-console-consumer \
@@ -211,11 +225,13 @@ docker exec -it kafka kafka-console-consumer \
 ## SAGA 패턴 장단점
 
 ### ✅ 장점
+
 1. **느슨한 결합**: 서비스 간 독립성 유지
 2. **확장성**: 새로운 서비스 추가 용이
 3. **장애 격리**: 한 서비스의 장애가 전체 시스템에 영향 미치지 않음
 
 ### ⚠️ 단점
+
 1. **복잡성**: 이벤트 추적 및 디버깅 어려움
 2. **일관성**: 최종 일관성(Eventual Consistency)만 보장
 3. **테스트**: 분산 환경 테스트 복잡
