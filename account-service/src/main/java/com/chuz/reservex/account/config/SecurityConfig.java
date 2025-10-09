@@ -1,6 +1,6 @@
 package com.chuz.reservex.account.config;
 
-import com.chuz.reservex.account.auth.JwtAuthenticationFilter;
+import com.chuz.reservex.common.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
