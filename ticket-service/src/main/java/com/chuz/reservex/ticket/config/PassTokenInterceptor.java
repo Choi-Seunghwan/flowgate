@@ -1,5 +1,6 @@
 package com.chuz.reservex.ticket.config;
 
+import com.chuz.reservex.ticket.queue.PassTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @RequiredArgsConstructor
 public class PassTokenInterceptor implements HandlerInterceptor {
 
-  private final PassTokenValidator passTokenValidator;
+  private final PassTokenService passTokenService;
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -53,7 +54,7 @@ public class PassTokenInterceptor implements HandlerInterceptor {
     return false;
   }
 
-  boolean valid = passTokenValidator.validateAndConsume(eventId, clientId, passToken);
+  boolean valid = passTokenService.validateAndConsume(eventId, clientId, passToken);
 
   if (!valid) {
     response.setStatus(HttpServletResponse.SC_FORBIDDEN);

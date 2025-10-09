@@ -121,4 +121,24 @@ public class QueueService {
   private long grantedCountSoFar(Long eventId) {
   return 0L;
   }
+
+  /**
+   * Pass Token 검증 및 소비 (ticket-service에서 호출)
+   */
+  public boolean validateAndConsumePassToken(Long eventId, String clientId, String passToken) {
+    String userKey = userKey(clientId);
+    String pkey = passKey(eventId, userKey);
+
+    // Redis에서 저장된 Pass Token 조회
+    String storedToken = redis.opsForValue().get(pkey);
+
+    if (storedToken == null || !storedToken.equals(passToken)) {
+      return false;
+    }
+
+    // 검증 성공 시 토큰 삭제 (일회성 처리)
+    redis.delete(pkey);
+
+    return true;
+  }
 }

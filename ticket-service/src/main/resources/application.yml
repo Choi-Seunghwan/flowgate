@@ -36,3 +36,8 @@ server:
 # JWT 설정 (account-service와 동일한 secret 사용)
 jwt:
   secret: your-secret-key-change-this-in-production-min-256-bits
+
+# Queue Service 연동
+app:
+  queue-service:
+    url: http://localhost:8083

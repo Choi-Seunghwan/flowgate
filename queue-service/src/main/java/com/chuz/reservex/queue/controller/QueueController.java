@@ -30,4 +30,15 @@ public class QueueController {
     return service.status(eventId, clientId);
   }
 
+  /**
+   * Pass Token 검증 (ticket-service에서 호출)
+   */
+  @PostMapping("/{eventId}/validate-pass-token")
+  public boolean validatePassToken(
+      @PathVariable Long eventId,
+      @RequestParam String clientId,
+      @RequestParam String passToken) {
+    return service.validateAndConsumePassToken(eventId, clientId, passToken);
+  }
+
 }
