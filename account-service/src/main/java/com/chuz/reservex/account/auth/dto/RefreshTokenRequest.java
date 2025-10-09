@@ -1,4 +1,4 @@
-package com.chuz.reservex.account.auth;
+package com.chuz.reservex.account.auth.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

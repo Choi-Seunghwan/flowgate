@@ -3,6 +3,9 @@ package com.chuz.reservex.account.auth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.chuz.reservex.account.auth.dto.AuthResponse;
+import com.chuz.reservex.account.auth.dto.LoginRequest;
+import com.chuz.reservex.account.auth.dto.RefreshTokenRequest;
 import com.chuz.reservex.account.auth.dto.SignupRequest;
 
 /**
