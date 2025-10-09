@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 여행 상품 엔티티
+ * 상품 엔티티
  */
 @Entity
 @Table(name = "products")
