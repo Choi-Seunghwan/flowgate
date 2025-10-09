@@ -3,9 +3,9 @@ spring:
     name: ticket-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/reservex_ticket
+    url: jdbc:postgresql://localhost:5433/reservex_ticket
     username: dev
-    password:
+    password: dev
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,7 +18,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:9093
     consumer:
       group-id: ticket-service
       auto-offset-reset: earliest

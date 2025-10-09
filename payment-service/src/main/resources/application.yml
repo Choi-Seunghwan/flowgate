@@ -3,9 +3,9 @@ spring:
     name: payment-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/reservex_payment
+    url: jdbc:postgresql://localhost:5433/reservex_payment
     username: dev
-    password:
+    password: dev
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,7 +18,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:9093
     consumer:
       group-id: payment-service
       auto-offset-reset: earliest
