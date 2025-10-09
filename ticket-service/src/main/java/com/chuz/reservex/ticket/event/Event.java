@@ -1,51 +1,46 @@
-package com.chuz.reservex.ticket.product;
+package com.chuz.reservex.ticket.event;
 
-import com.chuz.reservex.ticket.event.Event;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 상품 엔티티 (티켓 타입: VIP석, 일반석 등)
+ * 이벤트 엔티티 (콘서트, 공연, 스포츠 경기 등)
  */
 @Entity
-@Table(name = "products")
+@Table(name = "events")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Product {
+public class Event {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "event_id", nullable = false)
-  private Event event; // 이벤트
-
   @Column(nullable = false)
-  private String name; // 상품명 (VIP석, 일반석 등)
+  private String name; // 이벤트명
 
   @Column(columnDefinition = "TEXT")
-  private String description;
+  private String description; // 설명
 
   @Column(nullable = false)
-  private BigDecimal price;
+  private LocalDateTime eventDate; // 이벤트 날짜
 
   @Column(nullable = false)
-  private Integer totalStock; // 전체 재고
-
-  @Column(nullable = false)
-  private Integer availableStock; // 예매 가능한 재고
+  private String venue; // 장소
 
   @Column(nullable = false)
   private LocalDateTime saleStartAt; // 판매 시작 시간
 
   @Column(nullable = false)
   private LocalDateTime saleEndAt; // 판매 종료 시간
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private EventStatus status; // 상태
 
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
@@ -56,6 +51,9 @@ public class Product {
   protected void onCreate() {
     createdAt = LocalDateTime.now();
     updatedAt = LocalDateTime.now();
+    if (status == null) {
+      status = EventStatus.SCHEDULED;
+    }
   }
 
   @PreUpdate
@@ -63,16 +61,11 @@ public class Product {
     updatedAt = LocalDateTime.now();
   }
 
-  // 재고 감소
-  public void decreaseStock(int quantity) {
-    if (this.availableStock < quantity) {
-      throw new IllegalStateException("재고가 부족합니다.");
-    }
-    this.availableStock -= quantity;
-  }
-
-  // 재고 복구
-  public void increaseStock(int quantity) {
-    this.availableStock += quantity;
+  public enum EventStatus {
+    SCHEDULED,   // 예정
+    SELLING,     // 판매중
+    SOLD_OUT,    // 매진
+    ENDED,       // 종료
+    CANCELLED    // 취소
   }
 }
