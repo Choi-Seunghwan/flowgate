@@ -160,20 +160,13 @@ public enum PaymentStatus {
 
 ## 실행 방법
 
-### 1. Kafka 실행
+### Kafka 실행
 
 ```bash
 docker-compose up -d
 ```
 
-### 2. PostgreSQL 데이터베이스 생성
-
-```sql
-CREATE DATABASE flowgate_ticket;
-CREATE DATABASE flowgate_payment;
-```
-
-### 3. 서비스 실행
+### 서비스 실행
 
 ```bash
 # Ticket Service
@@ -182,7 +175,7 @@ CREATE DATABASE flowgate_payment;
 # Payment Service
 ./gradlew :payment-service:bootRun
 
-# Queue Service (선택)
+# Queue Service
 ./gradlew :queue-service:bootRun
 ```
 
