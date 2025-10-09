@@ -11,9 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
- * JWT 토큰 제공자
+ * JWT 토큰 제공자 (토큰 생성용)
  */
-@Component
+@Component("accountJwtTokenProvider")
 public class JwtTokenProvider {
 
   private final SecretKey secretKey;

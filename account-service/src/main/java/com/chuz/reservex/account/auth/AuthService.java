@@ -4,6 +4,7 @@ import com.chuz.reservex.account.auth.dto.SignupRequest;
 import com.chuz.reservex.account.user.User;
 import com.chuz.reservex.account.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,13 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
  * 인증 서비스
  */
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
+
+  public AuthService(
+      UserRepository userRepository,
+      PasswordEncoder passwordEncoder,
+      @Qualifier("accountJwtTokenProvider") JwtTokenProvider jwtTokenProvider) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.jwtTokenProvider = jwtTokenProvider;
+  }
 
   /**
    * 회원가입
