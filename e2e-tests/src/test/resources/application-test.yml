@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: e2e-tests
+
+# 로깅 설정
+logging:
+  level:
+    com.chuz.reservex: DEBUG
+    org.testcontainers: INFO
+    io.restassured: DEBUG

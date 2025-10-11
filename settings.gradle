@@ -7,5 +7,5 @@ pluginManagement {
 
 
 rootProject.name = 'reservex'
-include 'common', 'account-service', 'queue-service', 'ticket-service', 'payment-service'
+include 'common', 'account-service', 'queue-service', 'ticket-service', 'payment-service', 'e2e-tests'
 
