@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: queue-service
+
+  data:
+    redis:
+      host: localhost
+      port: 6380
+
+server:
+  port: 8083
+
+# 대기열 설정
+app:
+  queue:
+    passTokenTtlSeconds: 300  # Pass Token 유효시간: 5분
+    permitsPerMinute: 100      # 분당 통과 인원수
