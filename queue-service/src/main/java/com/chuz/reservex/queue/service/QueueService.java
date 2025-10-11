@@ -28,27 +28,23 @@ public class QueueService {
   return "q:%d:z".formatted(eventId);
   }
 
-  private String sKey(Long eventId, String userKey) {
-  return "q:%d:s:%s".formatted(eventId, userKey);
+  private String sKey(Long eventId, Long userId) {
+  return "q:%d:s:%d".formatted(eventId, userId);
   }
 
-  private String passKey(Long eventId, String userKey) {
-  return "q:%d:pass:%s".formatted(eventId, userKey);
+  private String passKey(Long eventId, Long userId) {
+  return "q:%d:pass:%d".formatted(eventId, userId);
   }
 
-  private String offsetKey(Long eventId, String userKey) {
-  return "q:%d:offset:%s".formatted(eventId, userKey);
+  private String offsetKey(Long eventId, Long userId) {
+  return "q:%d:offset:%d".formatted(eventId, userId);
   }
 
-  private String userKey(String clientId) {
-  return "u:%s".formatted(clientId);
-  }
-
-  public EnqueueRes enqueue(Long eventId, String clientId) {
-  String userKey = userKey(clientId);
+  public EnqueueRes enqueue(Long eventId, Long userId) {
+  String userKey = userId.toString();
   String z = zKey(eventId);
-  String s = sKey(eventId, userKey);
-  String offsetK = offsetKey(eventId, userKey);
+  String s = sKey(eventId, userId);
+  String offsetK = offsetKey(eventId, userId);
 
   if (Boolean.TRUE.equals(redis.hasKey(s))) {
     long pos = position(eventId, userKey);
@@ -73,10 +69,10 @@ public class QueueService {
   return new EnqueueRes(userKey, pos, offset);
   }
 
-  public StatusRes status(Long eventId, String clientId) {
-  String userKey = userKey(clientId);
+  public StatusRes status(Long eventId, Long userId) {
+  String userKey = userId.toString();
 
-  String pkey = passKey(eventId, userKey);
+  String pkey = passKey(eventId, userId);
   String pass = redis.opsForValue().get(pkey);
 
   if (pass != null) {
@@ -125,9 +121,8 @@ public class QueueService {
   /**
    * Pass Token 검증 및 소비 (ticket-service에서 호출)
    */
-  public boolean validateAndConsumePassToken(Long eventId, String clientId, String passToken) {
-    String userKey = userKey(clientId);
-    String pkey = passKey(eventId, userKey);
+  public boolean validateAndConsumePassToken(Long eventId, Long userId, String passToken) {
+    String pkey = passKey(eventId, userId);
 
     // Redis에서 저장된 Pass Token 조회
     String storedToken = redis.opsForValue().get(pkey);
