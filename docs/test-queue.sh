@@ -4,22 +4,57 @@
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+ACCOUNT_SERVICE="http://localhost:8081"
 QUEUE_SERVICE="http://localhost:8083"
 EVENT_ID=1
-CLIENT_ID="alice"
+
+# 테스트용 사용자 정보
+TEST_EMAIL="alice@example.com"
+TEST_PASSWORD="password123"
 
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}   Queue Service 테스트${NC}"
+echo -e "${BLUE}   ReserveX 통합 테스트${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo ""
 
-# 1. 대기열 진입
-echo -e "${GREEN}[1] 대기열 진입 (Enqueue)${NC}"
-echo "POST $QUEUE_SERVICE/queue/$EVENT_ID/enqueue?clientId=$CLIENT_ID"
+# 1. 로그인
+echo -e "${GREEN}[1] 로그인${NC}"
+echo "POST $ACCOUNT_SERVICE/api/auth/login"
 echo ""
-ENQUEUE_RESULT=$(curl -s -X POST "$QUEUE_SERVICE/queue/$EVENT_ID/enqueue?clientId=$CLIENT_ID")
+
+LOGIN_RESULT=$(curl -s -X POST "$ACCOUNT_SERVICE/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d "{\"email\":\"$TEST_EMAIL\",\"password\":\"$TEST_PASSWORD\"}")
+
+echo "$LOGIN_RESULT" | jq '.'
+
+# JWT 토큰 추출
+JWT_TOKEN=$(echo "$LOGIN_RESULT" | jq -r '.accessToken')
+
+if [ "$JWT_TOKEN" = "null" ] || [ -z "$JWT_TOKEN" ]; then
+  echo -e "${RED}❌ 로그인 실패! JWT 토큰을 받지 못했습니다.${NC}"
+  echo -e "${YELLOW}먼저 회원가입을 진행하세요:${NC}"
+  echo ""
+  echo "curl -X POST $ACCOUNT_SERVICE/api/auth/signup \\"
+  echo "  -H 'Content-Type: application/json' \\"
+  echo "  -d '{\"email\":\"$TEST_EMAIL\",\"password\":\"$TEST_PASSWORD\",\"name\":\"Alice\"}'"
+  echo ""
+  exit 1
+fi
+
+echo -e "${GREEN}✅ 로그인 성공!${NC}"
+echo -e "${BLUE}JWT Token: ${JWT_TOKEN:0:30}...${NC}"
+echo ""
+
+# 2. 대기열 진입
+echo -e "${GREEN}[2] 대기열 진입 (Enqueue)${NC}"
+echo "POST $QUEUE_SERVICE/queue/$EVENT_ID/enqueue"
+echo ""
+ENQUEUE_RESULT=$(curl -s -X POST "$QUEUE_SERVICE/queue/$EVENT_ID/enqueue" \
+  -H "Authorization: Bearer $JWT_TOKEN")
 echo "$ENQUEUE_RESULT" | jq '.'
 echo ""
 
@@ -28,9 +63,9 @@ POSITION=$(echo "$ENQUEUE_RESULT" | jq -r '.position')
 echo -e "${YELLOW}현재 대기 순번: $POSITION${NC}"
 echo ""
 
-# 2. 대기 상태 확인 (폴링)
-echo -e "${GREEN}[2] 대기 상태 확인 (Status)${NC}"
-echo "GET $QUEUE_SERVICE/queue/$EVENT_ID/status?clientId=$CLIENT_ID"
+# 3. 대기 상태 확인 (폴링)
+echo -e "${GREEN}[3] 대기 상태 확인 (Status)${NC}"
+echo "GET $QUEUE_SERVICE/queue/$EVENT_ID/status"
 echo ""
 
 MAX_ATTEMPTS=10
@@ -39,7 +74,8 @@ ATTEMPT=1
 while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
   echo -e "${YELLOW}폴링 시도 $ATTEMPT/$MAX_ATTEMPTS...${NC}"
 
-  STATUS_RESULT=$(curl -s -X GET "$QUEUE_SERVICE/queue/$EVENT_ID/status?clientId=$CLIENT_ID")
+  STATUS_RESULT=$(curl -s -X GET "$QUEUE_SERVICE/queue/$EVENT_ID/status" \
+    -H "Authorization: Bearer $JWT_TOKEN")
   echo "$STATUS_RESULT" | jq '.'
 
   CAN_PROCEED=$(echo "$STATUS_RESULT" | jq -r '.canProceed')
@@ -60,11 +96,11 @@ while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
     echo ""
     echo "예약 요청 예시:"
     echo ""
-    echo "curl -X POST http://localhost:8080/api/reservations?eventId=$EVENT_ID&clientId=$CLIENT_ID \\"
-    echo "  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \\"
+    echo "curl -X POST http://localhost:8080/api/reservations \\"
+    echo "  -H 'Authorization: Bearer $JWT_TOKEN' \\"
     echo "  -H 'X-Pass-Token: $PASS_TOKEN' \\"
     echo "  -H 'Content-Type: application/json' \\"
-    echo "  -d '{\"productId\": 1, \"quantity\": 2}'"
+    echo "  -d '{\"eventId\": $EVENT_ID, \"productId\": 1, \"quantity\": 2}'"
     echo ""
 
     exit 0
